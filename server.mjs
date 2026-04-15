@@ -6,20 +6,21 @@
 import express from "express";
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
 import OpenAI from "openai";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ─── Cargar datos ───────────────────────────────────────────────
 console.log("📖 Cargando leyes_procesadas.json...");
-const dataPath = path.join(__dirname, "leyes_procesadas.json");
-const rawData = JSON.parse(fs.readFileSync(dataPath, "utf-8"));
-console.log(`✅ ${rawData.articulos.length} artículos cargados`);
+const dataPath = path.join(process.cwd(), "leyes_procesadas.json");
+let rawData = { articulos: [], metadata: {} };
+try {
+  rawData = JSON.parse(fs.readFileSync(dataPath, "utf-8"));
+  console.log(`✅ ${rawData.articulos.length} artículos cargados`);
+} catch (e) {
+  console.error("❌ Error cargando leyes_procesadas.json en:", dataPath, e);
+}
 
 // Separar por ley (sin embeddings para el frontend, son muy pesados)
 const articulosSinEmbedding = rawData.articulos.map(({ embedding, ...rest }) => rest);
@@ -50,7 +51,7 @@ function cosineSimilarity(a, b) {
 
 // ─── Middleware ─────────────────────────────────────────────────
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(process.cwd(), "public")));
 
 // ─── API: Obtener artículos por ley ─────────────────────────────
 app.get("/api/articulos/:ley", (req, res) => {
@@ -143,7 +144,7 @@ app.post("/api/buscar", async (req, res) => {
 
 // Fallback para servir el index.html en serverless si no lo coge express.static
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+  res.sendFile(path.join(process.cwd(), "public", "index.html"));
 });
 
 // ─── Iniciar servidor ───────────────────────────────────────────
