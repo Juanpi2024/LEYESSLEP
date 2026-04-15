@@ -3,17 +3,16 @@
   "builds": [
     {
       "src": "server.mjs",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["public/**", "leyes_procesadas.json"]
+      }
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "server.mjs"
-    },
-    {
       "src": "/(.*)",
-      "dest": "/public/$1"
+      "dest": "server.mjs"
     }
   ]
 }

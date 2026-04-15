@@ -141,11 +141,20 @@ app.post("/api/buscar", async (req, res) => {
   });
 });
 
-// ─── Iniciar servidor ───────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log("");
-  console.log("═══════════════════════════════════════════════════════");
-  console.log(`  🏛️  App Leyes SLEP corriendo en: http://localhost:${PORT}`);
-  console.log("═══════════════════════════════════════════════════════");
-  console.log("");
+// Fallback para servir el index.html en serverless si no lo coge express.static
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
+
+// ─── Iniciar servidor ───────────────────────────────────────────
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log("");
+    console.log("═══════════════════════════════════════════════════════");
+    console.log(`  🏛️  App Leyes SLEP corriendo en: http://localhost:${PORT}`);
+    console.log("═══════════════════════════════════════════════════════");
+    console.log("");
+  });
+}
+
+export default app;
