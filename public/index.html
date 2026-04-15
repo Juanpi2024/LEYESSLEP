@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leyes SLEP — Consulta para Asistentes de la Educación</title>
+  <meta name="description" content="Consulta interactiva de las Leyes 21.040 y 21.109 del Sistema de Educación Pública de Chile. Herramienta para asistentes de la educación." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚖️</text></svg>" />
+</head>
+<body>
+  <!-- ═══ PANTALLA DE INICIO ═══ -->
+  <div id="pantalla-inicio" class="pantalla activa">
+    <div class="particulas" id="particulas"></div>
+    
+    <header class="hero">
+      <div class="hero-logo">
+        <img src="/assets/logo.png" alt="Logo Leyes SLEP" class="logo-img" />
+      </div>
+      <h1 class="hero-titulo">
+        <span class="titulo-linea1">Leyes</span>
+        <span class="titulo-linea2">SLEP</span>
+      </h1>
+      <p class="hero-subtitulo">Sistema de Educación Pública — Consulta Legislativa</p>
+      <p class="hero-desc">Herramienta de consulta para <strong>Asistentes de la Educación</strong></p>
+    </header>
+
+    <div class="cards-container">
+      <!-- Card Ley 21.040 -->
+      <div class="ley-card" id="card-21040" onclick="abrirLey('21.040')">
+        <div class="card-glow"></div>
+        <div class="card-content">
+          <div class="card-icon">🏛️</div>
+          <div class="card-badge">Ley N° 21.040</div>
+          <h2 class="card-titulo">Sistema de Educación Pública</h2>
+          <p class="card-desc">Crea el Sistema de Educación Pública, establece los Servicios Locales de Educación y regula el traspaso de la gestión educacional.</p>
+          <div class="card-stats">
+            <span class="stat"><span class="stat-num" id="stat-21040-arts">—</span> artículos</span>
+            <span class="stat"><span class="stat-num" id="stat-21040-trans">—</span> transitorios</span>
+          </div>
+          <div class="card-fecha">Publicada: 24 de noviembre de 2017</div>
+          <button class="card-btn">Consultar Ley →</button>
+        </div>
+      </div>
+
+      <!-- Card Ley 21.109 -->
+      <div class="ley-card" id="card-21109" onclick="abrirLey('21.109')">
+        <div class="card-glow"></div>
+        <div class="card-content">
+          <div class="card-icon">📋</div>
+          <div class="card-badge">Ley N° 21.109</div>
+          <h2 class="card-titulo">Estatuto Asistentes de la Educación</h2>
+          <p class="card-desc">Regula el estatuto de los asistentes de la educación que se desempeñan en establecimientos educacionales de los Servicios Locales.</p>
+          <div class="card-stats">
+            <span class="stat"><span class="stat-num" id="stat-21109-arts">—</span> artículos</span>
+            <span class="stat"><span class="stat-num" id="stat-21109-trans">—</span> transitorios</span>
+          </div>
+          <div class="card-fecha">Publicada: 2 de octubre de 2018</div>
+          <button class="card-btn">Consultar Ley →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Búsqueda global -->
+    <div class="busqueda-global">
+      <div class="search-box-global">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="busqueda-global-input" placeholder="Busca en ambas leyes… Ej: «derechos de los asistentes»" />
+        <button class="search-btn" id="btn-buscar-global" onclick="buscarGlobal()">Buscar</button>
+      </div>
+      <p class="search-hint">Búsqueda inteligente con IA — encuentra artículos por significado, no solo por palabras</p>
+    </div>
+
+    <footer class="footer-inicio">
+      <p class="firma-destacada">
+        App creada por <span class="firma-nombre">Juan Pablo Ramirez Y.</span><br/>
+        <span class="firma-rol">Técnico Contable, Experto en IA</span>
+      </p>
+    </footer>
+  </div>
+
+  <!-- ═══ PANTALLA DE LEY ═══ -->
+  <div id="pantalla-ley" class="pantalla">
+    <nav class="navbar">
+      <button class="nav-back" onclick="volverInicio()">← Volver</button>
+      <div class="nav-titulo">
+        <span class="nav-badge" id="nav-ley-badge">Ley N° 21.040</span>
+        <span class="nav-nombre" id="nav-ley-nombre">Sistema de Educación Pública</span>
+      </div>
+      <div class="nav-search">
+        <input type="text" id="busqueda-ley-input" placeholder="Buscar en esta ley…" />
+        <button class="nav-search-btn" onclick="buscarEnLey()">🔍</button>
+      </div>
+    </nav>
+
+    <div class="ley-layout">
+      <!-- Sidebar con Títulos -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <h3>📑 Índice</h3>
+        </div>
+        <div class="sidebar-tabs" id="sidebar-tabs">
+          <!-- Se llena dinámicamente -->
+        </div>
+      </aside>
+
+      <!-- Contenido principal -->
+      <main class="contenido" id="contenido-principal">
+        <!-- Se llena dinámicamente -->
+      </main>
+    </div>
+  </div>
+
+  <!-- ═══ PANTALLA DE BÚSQUEDA ═══ -->
+  <div id="pantalla-busqueda" class="pantalla">
+    <nav class="navbar">
+      <button class="nav-back" onclick="volverInicio()">← Volver</button>
+      <div class="nav-titulo">
+        <span class="nav-badge">🔍 Búsqueda</span>
+        <span class="nav-nombre" id="busqueda-query-display"></span>
+      </div>
+      <div class="nav-search">
+        <input type="text" id="busqueda-refinar-input" placeholder="Refinar búsqueda…" />
+        <button class="nav-search-btn" onclick="refinarBusqueda()">🔍</button>
+      </div>
+    </nav>
+
+    <div class="resultados-container" id="resultados-container">
+      <div class="resultados-header" id="resultados-header"></div>
+      <div class="resultados-lista" id="resultados-lista">
+        <!-- Se llena dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ MODAL ARTÍCULO ═══ -->
+  <div class="modal-overlay" id="modal-overlay" onclick="cerrarModal()">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="cerrarModal()">✕</button>
+      <div class="modal-content" id="modal-content">
+        <!-- Se llena dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ LOADING ═══ -->
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="loading-spinner"></div>
+    <p class="loading-text">Buscando artículos relevantes…</p>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "slep-app-leyes-slep",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^5.2.1",
+    "openai": "^6.34.0",
+    "pdfjs-dist": "^4.10.38"
+  }
+}
