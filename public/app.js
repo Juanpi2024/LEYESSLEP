@@ -11,6 +11,7 @@ let articulosTodos = [];
 const NOMBRES_LEY = {
   "21.040": "Sistema de Educación Pública",
   "21.109": "Estatuto Asistentes de la Educación",
+  "Convivencia Escolar / 21.128": "Ley de Convivencia Escolar",
 };
 
 // ─── Inicialización ─────────────────────────────────────────────
@@ -62,10 +63,12 @@ async function cargarDatos() {
     // Separar por ley
     datosLeyes["21.040"] = data.articulos.filter((a) => a.ley === "21.040");
     datosLeyes["21.109"] = data.articulos.filter((a) => a.ley === "21.109");
+    datosLeyes["Convivencia Escolar / 21.128"] = data.articulos.filter((a) => a.ley === "Convivencia Escolar / 21.128");
 
     // Actualizar stats en cards
     actualizarStats("21.040");
     actualizarStats("21.109");
+    actualizarStats("Convivencia Escolar / 21.128");
   } catch (err) {
     console.error("Error cargando datos:", err);
   }
@@ -76,7 +79,7 @@ function actualizarStats(ley) {
   const trans = arts.filter((a) => a.es_transitorio).length;
   const permanentes = arts.length - trans;
 
-  const leyKey = ley.replace(".", "");
+  const leyKey = ley.replace(/[^A-Za-z0-9]/g, "");
   const elArts = document.getElementById(`stat-${leyKey}-arts`);
   const elTrans = document.getElementById(`stat-${leyKey}-trans`);
 

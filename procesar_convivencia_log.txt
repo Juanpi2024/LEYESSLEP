@@ -1,0 +1,46 @@
+=== Inicio: 2026-04-17T14:54:31.358Z ===
+[2026-04-17T14:54:31.362Z] ═══════════════════════════════════════════════════════════
+[2026-04-17T14:54:31.366Z]   📜 Procesador de Leyes SLEP — Específico Convivencia
+[2026-04-17T14:54:31.367Z] ═══════════════════════════════════════════════════════════
+[2026-04-17T14:54:31.368Z] 📄 Ley Convivencia Escolar / 21.128: ley de convivencia.pdf
+[2026-04-17T14:54:31.369Z]   📖 Leyendo PDF...
+[2026-04-17T14:54:32.084Z]   ✅ 122.209 caracteres
+[2026-04-17T14:54:32.085Z]   📦 13 fragmentos
+[2026-04-17T14:54:32.086Z]   🤖 Extrayendo artículos...
+[2026-04-17T14:54:32.087Z]     → Fragmento 1/13
+[2026-04-17T14:54:58.378Z]       ✓ 1 artículos encontrados
+[2026-04-17T14:54:59.390Z]     → Fragmento 2/13
+[2026-04-17T14:55:23.627Z]       ✓ 2 artículos encontrados
+[2026-04-17T14:55:24.635Z]     → Fragmento 3/13
+[2026-04-17T14:55:49.931Z]       ✓ 2 artículos encontrados
+[2026-04-17T14:55:50.941Z]     → Fragmento 4/13
+[2026-04-17T14:55:52.457Z]       ✓ 1 artículos encontrados
+[2026-04-17T14:55:53.461Z]     → Fragmento 5/13
+[2026-04-17T14:56:14.915Z]       ✓ 2 artículos encontrados
+[2026-04-17T14:56:15.925Z]     → Fragmento 6/13
+[2026-04-17T14:56:17.231Z]       ✓ 1 artículos encontrados
+[2026-04-17T14:56:18.243Z]     → Fragmento 7/13
+[2026-04-17T14:56:20.018Z]       ✓ 0 artículos encontrados
+[2026-04-17T14:56:21.025Z]     → Fragmento 8/13
+[2026-04-17T14:56:51.235Z]       ✓ 2 artículos encontrados
+[2026-04-17T14:56:52.240Z]     → Fragmento 9/13
+[2026-04-17T14:57:30.891Z]       ✓ 5 artículos encontrados
+[2026-04-17T14:57:31.897Z]     → Fragmento 10/13
+[2026-04-17T14:58:03.958Z]       ✓ 4 artículos encontrados
+[2026-04-17T14:58:04.967Z]     → Fragmento 11/13
+[2026-04-17T14:58:28.715Z]       ✓ 6 artículos encontrados
+[2026-04-17T14:58:29.722Z]     → Fragmento 12/13
+[2026-04-17T14:59:10.287Z]       ✓ 14 artículos encontrados
+[2026-04-17T14:59:11.299Z]     → Fragmento 13/13
+[2026-04-17T14:59:12.523Z]       ✓ 0 artículos encontrados
+[2026-04-17T14:59:12.525Z]   🔄 38 artículos únicos
+[2026-04-17T14:59:12.525Z]   🧮 Generando 38 embeddings...
+[2026-04-17T14:59:12.526Z]     → Embedding 1/38
+[2026-04-17T14:59:18.289Z]     → Embedding 11/38
+[2026-04-17T14:59:23.129Z]     → Embedding 21/38
+[2026-04-17T14:59:28.166Z]     → Embedding 31/38
+[2026-04-17T14:59:31.435Z]     → Embedding 38/38
+[2026-04-17T14:59:31.668Z]   ✅ Ley Convivencia Escolar / 21.128: 38 artículos OK
+[2026-04-17T14:59:31.669Z] 💾 Guardando 38 artículos...
+[2026-04-17T14:59:31.687Z] ✅ Archivo guardado: D:\antigravity\app creadas\SLEP app leyes slep\ley_convivencia.json
+[2026-04-17T14:59:31.688Z] ✨ ¡Completado!
