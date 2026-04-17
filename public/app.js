@@ -11,7 +11,7 @@ let articulosTodos = [];
 const NOMBRES_LEY = {
   "21.040": "Sistema de Educación Pública",
   "21.109": "Estatuto Asistentes de la Educación",
-  "Convivencia Escolar / 21.128": "Ley de Convivencia Escolar",
+  "Convivencia Escolar / 21.128": "Nueva Ley de Convivencia Escolar (21.809)",
 };
 
 // ─── Inicialización ─────────────────────────────────────────────
