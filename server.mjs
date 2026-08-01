@@ -2,6 +2,7 @@ import express from "express";
 import OpenAI from "openai";
 import path from "path";
 import { fileURLToPath } from "url";
+import { revisarRespuesta, RESPUESTA_DE_RESGUARDO } from "./validacion.mjs";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -193,6 +194,22 @@ const handleConsultation = async (req, res) => {
     const answer = response.output_text?.trim();
     if (!answer) {
       throw new Error("Respuesta vacía del modelo");
+    }
+
+    // Última barrera antes de mostrar la respuesta. Si menciona un artículo,
+    // un monto o un plazo que la base verificada no respalda, se descarta y
+    // se deriva a LeyChile: es preferible no responder a responder mal.
+    const revision = revisarRespuesta(answer);
+    if (!revision.segura) {
+      // Se registran solo los motivos, nunca la consulta ni la respuesta,
+      // para no dejar rastro de lo que consultan las personas.
+      console.warn("Respuesta descartada por la validación:", revision.motivos.join("; "));
+      return res.json({
+        respuesta: RESPUESTA_DE_RESGUARDO,
+        aviso: "Información general y orientativa; no constituye asesoría jurídica.",
+        fuentes: OFFICIAL_SOURCES,
+        resguardo: true,
+      });
     }
 
     return res.json({

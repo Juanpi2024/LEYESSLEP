@@ -109,6 +109,23 @@ test("el asistente avisa cuando no hay servicio configurado", async () => {
   });
 });
 
+test("el asistente descarta una respuesta con datos inventados", async () => {
+  reiniciarLimites();
+  setClienteAsistente(
+    clienteFalso("Orientación general: el artículo 27 te concede un bono de $80.000 en 15 días.")
+  );
+
+  await withServer(async (baseUrl) => {
+    const response = await consultar(baseUrl, "¿Tengo derecho a un bono?");
+    const body = await response.json();
+
+    assert.equal(response.status, 200);
+    assert.equal(body.resguardo, true);
+    assert.doesNotMatch(body.respuesta, /27|80\.000|15 días/);
+    assert.match(body.respuesta, /no puedo confirmar ese dato/);
+  });
+});
+
 test("el asistente corta las consultas seguidas desde una misma IP", async () => {
   reiniciarLimites();
   setClienteAsistente(clienteFalso());
