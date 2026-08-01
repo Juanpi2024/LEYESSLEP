@@ -3,3 +3,5 @@ package-lock.json
 procesar_log.txt
 .env
 .DS_Store
+.vercel
+.env*

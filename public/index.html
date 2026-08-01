@@ -1,174 +1,261 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Leyes SLEP — Consulta para Asistentes de la Educación</title>
-  <meta name="description" content="Consulta interactiva de las Leyes 21.040 y 21.109 del Sistema de Educación Pública de Chile. Herramienta para asistentes de la educación." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/styles.css" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚖️</text></svg>" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guía Normativa SLEP | Fuentes oficiales para asistentes de la educación</title>
+  <meta name="description" content="Guía orientativa con enlaces oficiales a la normativa vigente sobre asistentes de la educación pública, SLEP y Consejos Locales de Educación Pública.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/safe.css?v=20260730-4">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚖️</text></svg>">
 </head>
 <body>
-  <!-- ═══ PANTALLA DE INICIO ═══ -->
-  <div id="pantalla-inicio" class="pantalla activa">
-    <div class="particulas" id="particulas"></div>
-    
-    <header class="hero">
-      <div class="hero-logo">
-        <img src="/assets/logo.png" alt="Logo Leyes SLEP" class="logo-img" />
-      </div>
-      <h1 class="hero-titulo">
-        <span class="titulo-linea1">Leyes</span>
-        <span class="titulo-linea2">SLEP</span>
-      </h1>
-      <p class="hero-subtitulo">Sistema de Educación Pública — Consulta Legislativa</p>
-      <p class="hero-desc">Herramienta de consulta para <strong>Asistentes de la Educación</strong></p>
-    </header>
-
-    <div class="cards-container">
-      <!-- Card Ley 21.040 -->
-      <div class="ley-card" id="card-21040" onclick="abrirLey('21.040')">
-        <div class="card-glow"></div>
-        <div class="card-content">
-          <div class="card-icon">🏛️</div>
-          <div class="card-badge">Ley N° 21.040</div>
-          <h2 class="card-titulo">Sistema de Educación Pública</h2>
-          <p class="card-desc">Crea el Sistema de Educación Pública, establece los Servicios Locales de Educación y regula el traspaso de la gestión educacional.</p>
-          <div class="card-stats">
-            <span class="stat"><span class="stat-num" id="stat-21040-arts">—</span> artículos</span>
-            <span class="stat"><span class="stat-num" id="stat-21040-trans">—</span> transitorios</span>
-          </div>
-          <div class="card-fecha">Publicada: 24 de noviembre de 2017</div>
-          <button class="card-btn">Consultar Ley →</button>
-        </div>
-      </div>
-
-      <!-- Card Ley 21.109 -->
-      <div class="ley-card" id="card-21109" onclick="abrirLey('21.109')">
-        <div class="card-glow"></div>
-        <div class="card-content">
-          <div class="card-icon">📋</div>
-          <div class="card-badge">Ley N° 21.109</div>
-          <h2 class="card-titulo">Estatuto Asistentes de la Educación</h2>
-          <p class="card-desc">Regula el estatuto de los asistentes de la educación que se desempeñan en establecimientos educacionales de los Servicios Locales.</p>
-          <div class="card-stats">
-            <span class="stat"><span class="stat-num" id="stat-21109-arts">—</span> artículos</span>
-            <span class="stat"><span class="stat-num" id="stat-21109-trans">—</span> transitorios</span>
-          </div>
-          <div class="card-fecha">Publicada: 2 de octubre de 2018</div>
-          <button class="card-btn">Consultar Ley →</button>
-        </div>
-      </div>
-
-      <!-- Card Ley Convivencia Escolar -->
-      <div class="ley-card" id="card-convivencia" onclick="abrirLey('Convivencia Escolar / 21.128')">
-        <div class="card-glow"></div>
-        <div class="card-content">
-          <div class="card-icon">🏫</div>
-          <div class="card-badge">Ley N° 21.809</div>
-          <h2 class="card-titulo">Nueva Ley de Convivencia Escolar</h2>
-          <p class="card-desc">Establece normas sobre convivencia, buen trato y bienestar educativo. Fue promulgada y publicada recientemente (Ley 21.809).</p>
-          <div class="card-stats">
-            <span class="stat"><span class="stat-num" id="stat-ConvivenciaEscolar21128-arts">—</span> artículos</span>
-            <span class="stat"><span class="stat-num" id="stat-ConvivenciaEscolar21128-trans">—</span> transitorios</span>
-          </div>
-          <div class="card-fecha">Publicada: 1 de abril de 2026</div>
-          <button class="card-btn">Consultar Ley →</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Búsqueda global -->
-    <div class="busqueda-global">
-      <div class="search-box-global">
-        <span class="search-icon">🔍</span>
-        <input type="text" id="busqueda-global-input" placeholder="Busca en todas las leyes… Ej: «derechos de los asistentes»" />
-        <button class="search-btn" id="btn-buscar-global" onclick="buscarGlobal()">Buscar</button>
-      </div>
-      <p class="search-hint">Búsqueda inteligente con IA — encuentra artículos por significado, no solo por palabras</p>
-    </div>
-
-    <footer class="footer-inicio">
-      <p class="firma-destacada">
-        App creada por <span class="firma-nombre">Juan Pablo Ramirez Y.</span><br/>
-        <span class="firma-rol">Técnico Contable, Experto en IA</span>
-      </p>
-    </footer>
-  </div>
-
-  <!-- ═══ PANTALLA DE LEY ═══ -->
-  <div id="pantalla-ley" class="pantalla">
-    <nav class="navbar">
-      <button class="nav-back" onclick="volverInicio()">← Volver</button>
-      <div class="nav-titulo">
-        <span class="nav-badge" id="nav-ley-badge">Ley N° 21.040</span>
-        <span class="nav-nombre" id="nav-ley-nombre">Sistema de Educación Pública</span>
-      </div>
-      <div class="nav-search">
-        <input type="text" id="busqueda-ley-input" placeholder="Buscar en esta ley…" />
-        <button class="nav-search-btn" onclick="buscarEnLey()">🔍</button>
-      </div>
+  <header class="hero">
+    <nav class="nav container" aria-label="Navegación principal">
+      <a class="brand" href="#inicio" aria-label="Ir al inicio">
+        <img src="/assets/logo.png" alt="" width="48" height="48">
+        <span>Guía Normativa SLEP</span>
+      </a>
+      <a class="campaign-link" href="https://campana-slep-jpramirez.vercel.app" target="_blank" rel="noopener noreferrer">Volver a la campaña ↗</a>
     </nav>
 
-    <div class="ley-layout">
-      <!-- Sidebar con Títulos -->
-      <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-          <h3>📑 Índice</h3>
+    <div class="hero-content container" id="inicio">
+      <div class="eyebrow">Revisión de referencias: 30 de julio de 2026</div>
+      <h1>Normas relevantes, explicadas con cautela</h1>
+      <p class="hero-lead">Esta guía orienta a asistentes de la educación del SLEP Los Álamos y dirige siempre al texto vigente de LeyChile, la fuente oficial de la Biblioteca del Congreso Nacional.</p>
+      <div class="hero-actions">
+        <a class="button primary" href="#clep">Revisar reglas del CLEP</a>
+        <a class="button secondary" href="#normas">Ver normas oficiales</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="notice-wrap container" aria-label="Advertencia jurídica">
+      <div class="notice">
+        <div class="notice-icon" aria-hidden="true">!</div>
+        <div>
+          <h2>Información general, no asesoría jurídica</h2>
+          <p>Los resúmenes no reemplazan el texto legal ni resuelven situaciones personales. La vigencia, el alcance y la aplicación concreta deben confirmarse en LeyChile y, cuando corresponda, con la unidad jurídica o representación competente.</p>
         </div>
-        <div class="sidebar-tabs" id="sidebar-tabs">
-          <!-- Se llena dinámicamente -->
+      </div>
+    </section>
+
+    <section class="section container" id="clep">
+      <div class="section-heading">
+        <span class="kicker">Lo central para esta campaña</span>
+        <h2>Qué establece hoy la ley sobre el Consejo Local</h2>
+        <p>La base está en los artículos 49 a 58 de la Ley 21.040, incorporando las modificaciones publicadas durante 2026.</p>
+      </div>
+
+      <div class="fact-grid">
+        <article class="fact-card">
+          <span class="fact-number">Art. 49</span>
+          <h3>Representación de la comunidad</h3>
+          <p>El CLEP colabora con el Director Ejecutivo y representa ante él los intereses de las comunidades educativas, para que se consideren sus necesidades y particularidades.</p>
+        </article>
+        <article class="fact-card">
+          <span class="fact-number">Art. 50, letra d)</span>
+          <h3>Dos representantes asistentes</h3>
+          <p>La integración vigente contempla dos representantes de los asistentes de la educación de establecimientos dependientes del SLEP, elegidos por sus pares.</p>
+        </article>
+        <article class="fact-card">
+          <span class="fact-number">Art. 51</span>
+          <h3>Tres años en el cargo</h3>
+          <p>La Ley 21.819 modificó la duración de los cargos del Consejo Local a tres años. Deben considerarse las reglas transitorias aplicables a cada proceso.</p>
+        </article>
+        <article class="fact-card">
+          <span class="fact-number">Arts. 54 y 56</span>
+          <h3>Ad honorem y sesiones</h3>
+          <p>El cargo no recibe remuneración ni dieta. El Consejo debe reunirse como mínimo seis veces por año calendario.</p>
+        </article>
+        <article class="fact-card">
+          <span class="fact-number">Arts. 52 y 57</span>
+          <h3>Atribuciones y publicidad</h3>
+          <p>Sus atribuciones están definidas por ley. Las sesiones son públicas y las actas aprobadas deben publicarse en el sitio del Servicio Local.</p>
+        </article>
+      </div>
+
+      <div class="scope-card">
+        <div>
+          <span class="scope-label">Límite que la campaña debe respetar</span>
+          <h3>El representante puede plantear, proponer, solicitar información y hacer seguimiento; no puede resolver por sí solo asuntos individuales ni administrar el SLEP.</h3>
+          <p>Por eso, los compromisos responsables son escuchar, documentar, llevar formalmente los temas al Consejo e informar las respuestas.</p>
         </div>
-      </aside>
+        <a class="button primary" href="https://www.bcn.cl/leychile/navegar?idNorma=1111237" target="_blank" rel="noopener noreferrer">Ley 21.040 vigente ↗</a>
+      </div>
+    </section>
 
-      <!-- Contenido principal -->
-      <main class="contenido" id="contenido-principal">
-        <!-- Se llena dinámicamente -->
-      </main>
+    <section class="section assistant-section" id="asistente">
+      <div class="container">
+        <div class="section-heading">
+          <span class="kicker">Asistente orientativo</span>
+          <h2>Consulta tus dudas en lenguaje sencillo</h2>
+          <p>Pregunta sobre el estatuto, el CLEP, convivencia o el marco laboral. El asistente te orientará y señalará qué fuente oficial conviene revisar.</p>
+        </div>
+
+        <div class="assistant-shell">
+          <aside class="assistant-sidebar">
+            <div class="assistant-identity">
+              <div class="assistant-avatar" aria-hidden="true">
+                <svg viewBox="0 0 24 24" role="img">
+                  <path d="M12 3a8 8 0 0 0-8 8v5a3 3 0 0 0 3 3h1v-7H6v-1a6 6 0 0 1 12 0v1h-2v7h2v1h-5v2h5a2 2 0 0 0 2-2v-1.8a3 3 0 0 0 1-2.2v-5a9 9 0 0 0-9-9Z"/>
+                </svg>
+              </div>
+              <div>
+                <span class="assistant-status"><i></i> Disponible</span>
+                <h3>Asistente Normativo</h3>
+                <p>SLEP Los Álamos</p>
+              </div>
+            </div>
+
+            <div class="assistant-guidance">
+              <span>Orientación responsable</span>
+              <p>Te ayuda a identificar la norma y el próximo paso prudente. No reemplaza asesoría jurídica.</p>
+            </div>
+
+            <div class="quick-questions" aria-label="Preguntas frecuentes">
+              <span class="quick-title">Puedes preguntarme</span>
+              <button type="button" data-question="¿Qué puede hacer realmente un representante de los asistentes ante el CLEP?"><span>01</span> Funciones del representante</button>
+              <button type="button" data-question="¿Cuál es el estatuto principal de los asistentes que trabajan en un SLEP?"><span>02</span> Nuestro estatuto</button>
+              <button type="button" data-question="¿Cómo se aplica el Código del Trabajo a los asistentes regidos por la Ley 21.109?"><span>03</span> Código del Trabajo</button>
+              <button type="button" data-question="¿Qué norma protege el buen trato y la convivencia en la comunidad educativa?"><span>04</span> Buen trato y convivencia</button>
+            </div>
+          </aside>
+
+          <div class="assistant-chat">
+            <div class="assistant-chatbar">
+              <div>
+                <strong>Consulta orientativa</strong>
+                <span>Respuestas claras con fuentes oficiales</span>
+              </div>
+              <span class="source-badge">Fuentes BCN · LeyChile</span>
+            </div>
+
+            <div id="assistant-messages" class="assistant-messages" aria-live="polite">
+              <div class="assistant-empty">
+                <div class="empty-icon" aria-hidden="true">?</div>
+                <strong>Hola, ¿en qué puedo orientarte?</strong>
+                <span>Escribe tu duda o elige una consulta frecuente.</span>
+              </div>
+            </div>
+
+            <form id="assistant-form" class="assistant-form">
+              <label class="sr-only" for="assistant-question">Tu consulta</label>
+              <div class="assistant-input-row">
+                <textarea id="assistant-question" maxlength="800" rows="2" required placeholder="Escribe aquí tu consulta sobre normativa…"></textarea>
+                <button id="assistant-submit" type="submit">
+                  <span>Enviar</span>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 14-7-4 14-3-6-7-1Zm7 1 7-8"/></svg>
+                </button>
+              </div>
+              <p class="assistant-privacy"><span aria-hidden="true">●</span> Protege tu privacidad: no ingreses RUT, datos de salud, nombres de estudiantes ni antecedentes sensibles.</p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-tint" id="normas">
+      <div class="container">
+        <div class="section-heading">
+          <span class="kicker">Fuentes oficiales</span>
+          <h2>Normativa que conviene consultar</h2>
+          <p>No reproducimos aquí artículos completos: así evitamos presentar como vigente una copia que podría quedar desactualizada.</p>
+        </div>
+
+        <div class="law-grid">
+          <article class="law-card featured">
+            <div class="law-topline">
+              <span class="law-number">Ley 21.109</span>
+              <span class="status primary-status">Norma principal</span>
+            </div>
+            <h3>Estatuto de los Asistentes de la Educación Pública</h3>
+            <p>Regula a quienes se desempeñan en establecimientos dependientes de los SLEP. Define categorías, funciones, derechos, deberes y desarrollo laboral. Su artículo 3 dispone que, en lo no regulado expresamente, se aplica supletoriamente el Código del Trabajo.</p>
+            <p class="version">Versión consultada en LeyChile: vigente desde el 1 de julio de 2026.</p>
+            <a href="https://www.bcn.cl/leychile/navegar?idNorma=1123513" target="_blank" rel="noopener noreferrer">Consultar texto vigente ↗</a>
+          </article>
+
+          <article class="law-card">
+            <div class="law-topline">
+              <span class="law-number">Ley 21.040</span>
+              <span class="status">SLEP y CLEP</span>
+            </div>
+            <h3>Sistema de Educación Pública</h3>
+            <p>Crea el Sistema de Educación Pública y regula los Servicios Locales. Los artículos 49 a 58 establecen la definición, integración, atribuciones y funcionamiento de los Consejos Locales.</p>
+            <p class="version">Versión consultada en LeyChile: vigente desde el 1 de julio de 2026.</p>
+            <a href="https://www.bcn.cl/leychile/navegar?idNorma=1111237" target="_blank" rel="noopener noreferrer">Consultar texto vigente ↗</a>
+          </article>
+
+          <article class="law-card">
+            <div class="law-topline">
+              <span class="law-number">Ley 21.819</span>
+              <span class="status recent">Cambio reciente</span>
+            </div>
+            <h3>Fortalecimiento del Sistema de Educación Pública</h3>
+            <p>Modificó la Ley 21.040 y actualizó reglas relevantes del CLEP, entre ellas la elección de representantes asistentes por sus pares y la duración de tres años del cargo.</p>
+            <p class="version">Publicada y vigente desde el 25 de mayo de 2026.</p>
+            <a href="https://www.bcn.cl/leychile/navegar?idNorma=1224471" target="_blank" rel="noopener noreferrer">Consultar texto oficial ↗</a>
+          </article>
+
+          <article class="law-card">
+            <div class="law-topline">
+              <span class="law-number">Ley 21.809</span>
+              <span class="status recent">Vigente 2026</span>
+            </div>
+            <h3>Convivencia, buen trato y bienestar</h3>
+            <p>Fortalece la prevención del acoso escolar, la discriminación y la violencia en las comunidades educativas. También introdujo modificaciones a la Ley 21.109.</p>
+            <p class="version">Rige desde el 1 de julio de 2026.</p>
+            <a href="https://www.bcn.cl/leychile/navegar?idNorma=1222799" target="_blank" rel="noopener noreferrer">Consultar texto oficial ↗</a>
+          </article>
+
+          <article class="law-card caution">
+            <div class="law-topline">
+              <span class="law-number">Ley 19.464</span>
+              <span class="status caution-status">Alcance según régimen</span>
+            </div>
+            <h3>Norma complementaria</h3>
+            <p>Establece normas y concede un aumento de remuneraciones para el personal no docente de los establecimientos que indica. Para asistentes ya traspasados a un SLEP, no es el estatuto principal: la regla general es la Ley 21.109.</p>
+            <a href="https://www.bcn.cl/leychile/navegar?idNorma=30831" target="_blank" rel="noopener noreferrer">Consultar texto vigente ↗</a>
+          </article>
+
+          <article class="law-card caution">
+            <div class="law-topline">
+              <span class="law-number">Código del Trabajo</span>
+              <span class="status caution-status">Aplicación supletoria</span>
+            </div>
+            <h3>No reemplaza el estatuto especial</h3>
+            <p>Para asistentes regidos por la Ley 21.109, se aplica en materias no reguladas expresamente por ese estatuto y siempre que no sea contrario a él. La respuesta concreta depende de la materia y del régimen jurídico aplicable.</p>
+            <a href="https://www.bcn.cl/leychile/navegar?idNorma=207436" target="_blank" rel="noopener noreferrer">Consultar texto vigente ↗</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section container">
+      <div class="method">
+        <div>
+          <span class="kicker">Criterio de seguridad</span>
+          <h2>Cómo usar esta guía sin asumir riesgos innecesarios</h2>
+        </div>
+        <ol>
+          <li><strong>Abre LeyChile</strong> desde el enlace de cada norma.</li>
+          <li><strong>Comprueba “Última versión”</strong> y la fecha que muestra la fuente oficial.</li>
+          <li><strong>No conviertas un resumen en una promesa</strong> sobre beneficios, pagos o resultados individuales.</li>
+          <li><strong>Consulta un caso particular</strong> con la unidad jurídica o representación competente.</li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-content">
+      <p><strong>Guía Normativa SLEP</strong><br>Herramienta orientativa creada por Juan Pablo Ramírez Yáñez.</p>
+      <p>Fuente de referencia: Biblioteca del Congreso Nacional de Chile · LeyChile.<br>Última revisión de enlaces y vigencia: 30 de julio de 2026.</p>
     </div>
-  </div>
-
-  <!-- ═══ PANTALLA DE BÚSQUEDA ═══ -->
-  <div id="pantalla-busqueda" class="pantalla">
-    <nav class="navbar">
-      <button class="nav-back" onclick="volverInicio()">← Volver</button>
-      <div class="nav-titulo">
-        <span class="nav-badge">🔍 Búsqueda</span>
-        <span class="nav-nombre" id="busqueda-query-display"></span>
-      </div>
-      <div class="nav-search">
-        <input type="text" id="busqueda-refinar-input" placeholder="Refinar búsqueda…" />
-        <button class="nav-search-btn" onclick="refinarBusqueda()">🔍</button>
-      </div>
-    </nav>
-
-    <div class="resultados-container" id="resultados-container">
-      <div class="resultados-header" id="resultados-header"></div>
-      <div class="resultados-lista" id="resultados-lista">
-        <!-- Se llena dinámicamente -->
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══ MODAL ARTÍCULO ═══ -->
-  <div class="modal-overlay" id="modal-overlay" onclick="cerrarModal()">
-    <div class="modal" onclick="event.stopPropagation()">
-      <button class="modal-close" onclick="cerrarModal()">✕</button>
-      <div class="modal-content" id="modal-content">
-        <!-- Se llena dinámicamente -->
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══ LOADING ═══ -->
-  <div class="loading-overlay" id="loading-overlay">
-    <div class="loading-spinner"></div>
-    <p class="loading-text">Buscando artículos relevantes…</p>
-  </div>
-
-  <script src="/app.js"></script>
+  </footer>
+  <script src="/assistant.js?v=20260730-4" defer></script>
 </body>
 </html>

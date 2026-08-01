@@ -5,7 +5,7 @@
       "src": "server.mjs",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["public/**", "leyes_procesadas.json"]
+        "includeFiles": ["public/**"]
       }
     }
   ],

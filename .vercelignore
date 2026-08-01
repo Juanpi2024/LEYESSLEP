@@ -1,0 +1,11 @@
+node_modules
+.git
+.env*
+*.pdf
+leyes_procesadas.json
+ley_convivencia.json
+procesar_*.mjs
+procesar_*.js
+procesar_*.txt
+merge_leyes.mjs
+test
