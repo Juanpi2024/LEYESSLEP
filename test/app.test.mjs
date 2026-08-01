@@ -64,6 +64,32 @@ test("los recursos de compatibilidad existen y fuerzan una URL actualizada", asy
   });
 });
 
+test("una ruta inexistente responde 404 y no la portada", async () => {
+  await withServer(async (baseUrl) => {
+    const response = await fetch(`${baseUrl}/pagina-que-no-existe`);
+    const html = await response.text();
+
+    assert.equal(response.status, 404);
+    assert.match(html, /Esta página no existe/);
+    assert.match(html, /noindex/);
+  });
+});
+
+test("las respuestas llevan cabeceras de seguridad", async () => {
+  await withServer(async (baseUrl) => {
+    const response = await fetch(baseUrl);
+    const csp = response.headers.get("content-security-policy");
+
+    assert.match(csp, /frame-ancestors 'none'/);
+    // La guía no tiene scripts en línea: la política no debe relajarse.
+    assert.doesNotMatch(csp, /unsafe-inline/);
+    assert.equal(response.headers.get("x-content-type-options"), "nosniff");
+    assert.equal(response.headers.get("x-frame-options"), "DENY");
+    assert.match(response.headers.get("referrer-policy"), /strict-origin/);
+    assert.equal(response.headers.get("x-powered-by"), null);
+  });
+});
+
 test("la API antigua queda retirada con una explicación segura", async () => {
   await withServer(async (baseUrl) => {
     const response = await fetch(`${baseUrl}/api/articulos`);

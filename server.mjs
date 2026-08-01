@@ -145,6 +145,34 @@ FORMATO:
 `;
 
 app.disable("x-powered-by");
+
+// Cabeceras de seguridad. Esta página no tiene scripts, estilos ni
+// manejadores en línea, así que admite una política estricta: nada de
+// 'unsafe-inline'. Si más adelante se agrega un <script> dentro del HTML,
+// dejará de funcionar, y eso es intencional.
+const POLITICA_DE_CONTENIDO = [
+  "default-src 'self'",
+  "script-src 'self'",
+  "style-src 'self' https://fonts.googleapis.com",
+  "font-src https://fonts.gstatic.com",
+  "img-src 'self' data:",
+  "connect-src 'self'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  // Impide que la guía se muestre dentro de otro sitio haciéndola pasar por
+  // propia, que en campaña es un riesgo de suplantación concreto.
+  "frame-ancestors 'none'",
+].join("; ");
+
+app.use((_req, res, next) => {
+  res.setHeader("Content-Security-Policy", POLITICA_DE_CONTENIDO);
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Permissions-Policy", "geolocation=(), microphone=(), camera=(), interest-cohort=()");
+  res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  next();
+});
 // Una consulta valida no pasa de 800 caracteres; no hay motivo para aceptar
 // cuerpos grandes.
 app.use(express.json({ limit: "8kb" }));
@@ -243,9 +271,17 @@ app.get("/api/articulos", retiredApi);
 app.get("/api/articulos/:ley", retiredApi);
 app.post("/api/buscar", limitarConsultas, handleConsultation);
 
-app.get("*", (_req, res) => {
+// Antes, cualquier ruta inexistente devolvía la portada con estado 200: los
+// buscadores indexaban páginas fantasma y ningún monitoreo detectaba enlaces
+// rotos. La portada la sirve express.static en "/".
+app.use((req, res) => {
+  res.status(404);
   res.setHeader("Cache-Control", "no-store, max-age=0");
-  res.sendFile(path.join(publicDir, "index.html"));
+
+  if (req.accepts("html")) {
+    return res.sendFile(path.join(publicDir, "404.html"));
+  }
+  return res.json({ error: "No encontrado." });
 });
 
 const isDirectRun = process.argv[1]

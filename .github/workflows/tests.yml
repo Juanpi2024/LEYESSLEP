@@ -1,0 +1,35 @@
+name: Pruebas
+
+# Vercel despliega solo al empujar a main. Sin esta barrera, un cambio con
+# fallas llega a producción sin que nadie lo note.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # 20 se acerca al entorno de Vercel; 22 es el que se usa en desarrollo.
+        node: ["20.x", "22.x"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      # npm ci instala exactamente lo del package-lock.json versionado.
+      - run: npm ci
+
+      - run: npm test
+        env:
+          # El asistente nunca debe llamar a la API real durante las pruebas.
+          OPENAI_API_KEY: ""
