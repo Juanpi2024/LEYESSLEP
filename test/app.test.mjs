@@ -1,6 +1,21 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import app from "../server.mjs";
+import app, { setClienteAsistente, reiniciarLimites } from "../server.mjs";
+
+// Cliente falso: los tests nunca deben llamar a la API real ni depender de
+// que la maquina tenga (o no) OPENAI_API_KEY configurada.
+const clienteFalso = (respuesta = "Orientación general: texto de prueba.") => ({
+  responses: {
+    create: async () => ({ output_text: respuesta }),
+  },
+});
+
+const consultar = (baseUrl, pregunta, cabeceras = {}) =>
+  fetch(`${baseUrl}/api/consultar`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...cabeceras },
+    body: JSON.stringify({ pregunta }),
+  });
 
 async function withServer(run) {
   const server = app.listen(0);
@@ -59,21 +74,71 @@ test("la API antigua queda retirada con una explicación segura", async () => {
   });
 });
 
-test("el asistente valida consultas y protege el servicio sin clave local", async () => {
-  await withServer(async (baseUrl) => {
-    const invalidResponse = await fetch(`${baseUrl}/api/consultar`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pregunta: "no" }),
-    });
-    assert.equal(invalidResponse.status, 400);
+test("el asistente rechaza consultas demasiado cortas", async () => {
+  reiniciarLimites();
+  setClienteAsistente(clienteFalso());
 
-    const unavailableResponse = await fetch(`${baseUrl}/api/consultar`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pregunta: "¿Cuál es nuestro estatuto principal?" }),
+  await withServer(async (baseUrl) => {
+    const response = await consultar(baseUrl, "no");
+    assert.equal(response.status, 400);
+  });
+});
+
+test("el asistente responde con aviso y fuentes cuando hay servicio", async () => {
+  reiniciarLimites();
+  setClienteAsistente(clienteFalso());
+
+  await withServer(async (baseUrl) => {
+    const response = await consultar(baseUrl, "¿Cuál es nuestro estatuto principal?");
+    const body = await response.json();
+
+    assert.equal(response.status, 200);
+    assert.match(body.respuesta, /Orientación general/);
+    assert.match(body.aviso, /no constituye asesoría jurídica/);
+    assert.ok(body.fuentes["Ley 21.109"]);
+  });
+});
+
+test("el asistente avisa cuando no hay servicio configurado", async () => {
+  reiniciarLimites();
+  setClienteAsistente(null);
+
+  await withServer(async (baseUrl) => {
+    const response = await consultar(baseUrl, "¿Cuál es nuestro estatuto principal?");
+    assert.equal(response.status, 503);
+  });
+});
+
+test("el asistente corta las consultas seguidas desde una misma IP", async () => {
+  reiniciarLimites();
+  setClienteAsistente(clienteFalso());
+
+  await withServer(async (baseUrl) => {
+    const permitidas = [];
+    for (let intento = 0; intento < 5; intento += 1) {
+      const response = await consultar(baseUrl, "¿Qué hace el Consejo Local?");
+      permitidas.push(response.status);
+    }
+    assert.deepEqual(permitidas, [200, 200, 200, 200, 200]);
+
+    const bloqueada = await consultar(baseUrl, "¿Qué hace el Consejo Local?");
+    const body = await bloqueada.json();
+
+    assert.equal(bloqueada.status, 429);
+    assert.match(body.error, /Espera un minuto/);
+  });
+});
+
+test("el asistente solo atiende consultas desde la propia guía", async () => {
+  reiniciarLimites();
+  setClienteAsistente(clienteFalso());
+
+  await withServer(async (baseUrl) => {
+    const response = await consultar(baseUrl, "¿Cuál es nuestro estatuto principal?", {
+      Origin: "https://sitio-que-copia-la-guia.example",
     });
-    assert.equal(unavailableResponse.status, 503);
+
+    assert.equal(response.status, 403);
   });
 });
 

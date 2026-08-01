@@ -6,9 +6,93 @@ import { fileURLToPath } from "url";
 const app = express();
 const PORT = process.env.PORT || 3000;
 const publicDir = path.join(process.cwd(), "public");
-const openai = process.env.OPENAI_API_KEY
+
+// El cliente se resuelve una sola vez, pero se puede reemplazar desde los
+// tests con setClienteAsistente para no llamar a la API real.
+let openai = process.env.OPENAI_API_KEY
   ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
   : null;
+
+export const setClienteAsistente = (cliente) => {
+  openai = cliente;
+};
+
+// Limites de uso del asistente. /api/consultar llama a un servicio pagado
+// y es publico, asi que sin estos topes cualquiera puede usar la clave.
+const CONSULTAS_POR_MINUTO = Number(process.env.CONSULTAS_POR_MINUTO || 5);
+const CONSULTAS_POR_DIA = Number(process.env.CONSULTAS_POR_DIA || 300);
+const VENTANA_MS = 60_000;
+
+const consultasPorIp = new Map();
+let consultasDelDia = 0;
+let diaEnCurso = new Date().toISOString().slice(0, 10);
+
+export const reiniciarLimites = () => {
+  consultasPorIp.clear();
+  consultasDelDia = 0;
+  diaEnCurso = new Date().toISOString().slice(0, 10);
+};
+
+const origenPermitido = (req) => {
+  const origen = req.get("origin");
+  if (!origen) return true; // peticiones sin navegador (tests, curl, monitoreo)
+
+  const permitidos = (process.env.ORIGENES_PERMITIDOS || "")
+    .split(",")
+    .map((valor) => valor.trim())
+    .filter(Boolean);
+
+  try {
+    const host = new URL(origen).host;
+    // Acepta el propio dominio, lo que cubre dominios propios y previews.
+    return host === req.get("host") || permitidos.includes(origen) || permitidos.includes(host);
+  } catch {
+    return false;
+  }
+};
+
+const limitarConsultas = (req, res, next) => {
+  if (!origenPermitido(req)) {
+    return res.status(403).json({
+      error: "Esta consulta debe hacerse desde la guía oficial.",
+    });
+  }
+
+  const hoy = new Date().toISOString().slice(0, 10);
+  if (hoy !== diaEnCurso) {
+    diaEnCurso = hoy;
+    consultasDelDia = 0;
+  }
+
+  if (consultasDelDia >= CONSULTAS_POR_DIA) {
+    return res.status(429).json({
+      error: "El asistente alcanzó su límite de consultas por hoy. Puedes revisar directamente las fuentes oficiales enlazadas en esta página.",
+    });
+  }
+
+  const ip = (req.headers["x-forwarded-for"] || "").split(",")[0].trim() || req.ip || "desconocida";
+  const ahora = Date.now();
+  const recientes = (consultasPorIp.get(ip) || []).filter((marca) => ahora - marca < VENTANA_MS);
+
+  if (recientes.length >= CONSULTAS_POR_MINUTO) {
+    return res.status(429).json({
+      error: "Estás enviando consultas muy seguidas. Espera un minuto e inténtalo de nuevo.",
+    });
+  }
+
+  recientes.push(ahora);
+  consultasPorIp.set(ip, recientes);
+  consultasDelDia += 1;
+
+  // Evita que el mapa crezca sin control en procesos de larga duración.
+  if (consultasPorIp.size > 5000) {
+    for (const [clave, marcas] of consultasPorIp) {
+      if (marcas.every((marca) => ahora - marca >= VENTANA_MS)) consultasPorIp.delete(clave);
+    }
+  }
+
+  next();
+};
 
 const OFFICIAL_SOURCES = {
   "Ley 21.109": "https://www.bcn.cl/leychile/navegar?idNorma=1123513",
@@ -60,7 +144,9 @@ FORMATO:
 `;
 
 app.disable("x-powered-by");
-app.use(express.json());
+// Una consulta valida no pasa de 800 caracteres; no hay motivo para aceptar
+// cuerpos grandes.
+app.use(express.json({ limit: "8kb" }));
 app.use(express.static(publicDir, {
   etag: true,
   maxAge: process.env.NODE_ENV === "production" ? "1d" : 0,
@@ -122,7 +208,7 @@ const handleConsultation = async (req, res) => {
   }
 };
 
-app.post("/api/consultar", handleConsultation);
+app.post("/api/consultar", limitarConsultas, handleConsultation);
 
 const retiredApi = (_req, res) => {
   res.status(410).json({
@@ -134,7 +220,7 @@ const retiredApi = (_req, res) => {
 
 app.get("/api/articulos", retiredApi);
 app.get("/api/articulos/:ley", retiredApi);
-app.post("/api/buscar", handleConsultation);
+app.post("/api/buscar", limitarConsultas, handleConsultation);
 
 app.get("*", (_req, res) => {
   res.setHeader("Cache-Control", "no-store, max-age=0");
