@@ -164,6 +164,10 @@ app.get("/api/estado", (_req, res) => {
     fuente_oficial: "Biblioteca del Congreso Nacional de Chile - LeyChile",
     revisado_el: "2026-07-30",
     reproduce_articulos: false,
+    // Permite comprobar que versión está desplegada sin gastar una consulta
+    // al modelo, porque la validación solo actúa después de llamarlo.
+    valida_respuestas: true,
+    limita_consultas: true,
   });
 });
 

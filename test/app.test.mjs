@@ -167,5 +167,7 @@ test("el estado informa la fecha y que no reproduce artículos", async () => {
     assert.equal(response.status, 200);
     assert.equal(body.revisado_el, "2026-07-30");
     assert.equal(body.reproduce_articulos, false);
+    assert.equal(body.valida_respuestas, true);
+    assert.equal(body.limita_consultas, true);
   });
 });
